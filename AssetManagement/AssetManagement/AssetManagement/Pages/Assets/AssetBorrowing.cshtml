@@ -1,0 +1,132 @@
+﻿@page
+@model AssetManagement.Pages.Assets.AssetBorrowingModel
+
+@{
+    ViewData["Title"] = "AssetBorrowing";
+
+}
+
+<h1>Danh sách Assets Borrowing</h1>
+
+@if(ViewBag.user == null)
+{
+    <h1>You must be logged to see this</h1>
+}else{
+    <a href="/Assets/AssetBorrowing">Back to list</a>
+    <form method="post">
+         <label for="cars">Status:</label>
+         <input type="hidden" name="page" value="1" />
+            <select name="stat" onchange="this.form.submit()">
+                <option selected="@(ViewBag.status == 0?"selected":null)" value="0">--All Status--</option>               
+                    <option selected="@(ViewBag.status == 1?"selected":null)" value="1">Đang mượn</option>
+                    <option selected="@(ViewBag.status == 2?"selected":null)"  value="2">Đã trả</option>
+
+            </select>
+    </form>
+
+
+<table class="table" style="min-height:400px">
+    <thead>
+        <tr>
+            <th>
+                Asset Name
+            </th>
+            <th>
+                Asset Image
+            </th>
+            <th>
+                Category
+            </th>
+            <th>
+                Ngày Đăng Ký Mượn
+            </th>
+            <th>
+               Status
+            </th>
+            <th>
+                Hạn phải trả
+            </th>
+            <th>
+                Ngày trả 
+            </th>
+           
+          
+            
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.BorrowingAsset) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Asset.AssetName)
+            </td>
+            <td>
+                <img src="/images/@item.Asset.Image" width="150" height="150">
+            </td>
+             <td>
+                @Html.DisplayFor(modelItem => item.Asset.Category.CategoryName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BorrowDate)
+            </td>
+            
+                @if(item.Status == true){
+                        <td>
+                            Đang mượn
+                        </td>
+                    }
+                    else
+                    {
+                         <td>
+                            Đã trả
+                        </td>
+                    }
+
+            <td>
+                @Html.DisplayFor(modelItem => item.DueDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RetrurnDate)
+            </td>
+                                       
+        </tr>
+}
+    </tbody>
+</table>
+<table style="margin-top:100px">
+    <tr>
+        <td>
+            <form method="post">
+                <input type="hidden" name="page" value="@(ViewBag.page - 1)" />
+                <input type="hidden" name="stat" value="@ViewBag.status"  />
+                @if (ViewBag.page == 1)
+                {
+                    <button disabled style="width:60px;color:white;background:#6d7687" type="submit">Previos</button>
+                }
+                else
+                {
+                    <button style="width:60px;color:white;background:#015bff" type="submit">Previos</button>
+                }
+            </form>
+        </td>
+        <td>
+        <td>
+            <form method="post">
+                    <input type="hidden" name="page" value="@(ViewBag.page + 1)" />
+                    <input type="hidden" name="stat" value="@ViewBag.status"  />
+
+                    @if (ViewBag.page == ViewBag.totalPage)
+                    {
+                    <button disabled style="width:60px;color:white;background:#6d7687" type="submit">Next</button>
+                    }
+                    else
+                    {
+                    <button style="width:60px;color:white;background:#015bff" type="submit">Next</button>
+                    }
+            </form>
+        </td>
+        <td><div>Page:@ViewBag.page/@ViewBag.totalPage</div></td>
+    </tr>
+</table>
+}

@@ -1,0 +1,2 @@
+dotnet ef dbcontext scaffold "server =DESKTOP-OF0V18H\FANNABY; database =PRN231_AS1;uid=sa;pwd=12345" Microsoft.EntityFrameworkCore.SqlServer --output-dir Models
+dotnet ef dbcontext scaffold "server =DESKTOP-O7J5K9T; database = StockManagement;uid=sa;pwd=123456;" Microsoft.EntityFrameworkCore.SqlServer --output-dir Models

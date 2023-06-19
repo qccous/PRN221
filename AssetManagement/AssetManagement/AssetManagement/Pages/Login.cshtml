@@ -1,0 +1,28 @@
+﻿@page
+@model AssetManagement.Pages.LoginModel
+@{
+}
+<h1>Login</h1>
+<hr style="border: 1px solid black; width: 100%; margin: 0 auto;">
+@if(Model.error == 1) {
+    <div style="color:red">Username or password is incorrect!</div>
+}
+<form method="post">
+    <table>
+        <tr>
+            <td>Username</td>
+        </tr>
+        <tr>
+            <td><input asp-for="@Model.account.username" type="text" /></td>
+        </tr>
+        <tr>
+            <td>Password</td>
+        </tr>
+        <tr>
+            <td><input asp-for="@Model.account.password" type="password" /></td>
+        </tr>
+        <tr>
+            <td><button type="submit" style="background:#F26f21;color:white">Login</button></td>
+        </tr>
+    </table>
+</form>
