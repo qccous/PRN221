@@ -1,0 +1,100 @@
+﻿@page
+@model AssetManagement.Pages.Admin.Assets.ListModel
+
+@{
+	ViewData["Title"] = "List";
+}
+
+<h1>List</h1>
+
+<p>
+	<a asp-page="Create">Create New</a>
+</p>
+<Form asp-page="./Index" method="get">
+	<div class="form-actions no-color">
+		<p>
+			Find by name:
+			<input type="text" name="SearchString" value="@Model.CurrentFilter" />
+			<input type="submit" value="Search" class="btn btn-primary" />
+			<a asp-page="./List">Back to full List</a>
+		</p>
+	</div>
+</Form>
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				<a asp-page="./List" asp-route-sortOrder="@Model.NameSort"
+				   asp-route-currentFilter="@Model.CurrentFilter">
+					@Html.DisplayNameFor(model => model.Asset[0].AssetName)
+				</a>
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Asset[0].Status)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Asset[0].Image)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Asset[0].Specification)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Asset[0].Category)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model.Asset)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.AssetName)
+				</td>
+				@if (item.Status == true)
+				{
+					<td style="color: red; font-weight: bold;">
+						Đang mượn
+					</td>
+				}
+				else
+				{
+					<td style="color: green; font-weight: bold;">
+						Sẵn sàng
+					</td>
+				}
+				<td>
+					<img src="/images/@item.Image" width="100px" height="100px" />
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Specification)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Category.CategoryName)
+				</td>
+				<td>
+					<a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+					<a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+@{
+	var prevDisabled = !Model.Asset.HasPreviousPage ? "disabled" : "";
+	var nextDisabled = !Model.Asset.HasNextPage ? "disabled" : "";
+}
+<a asp-page="./List"
+   asp-route-sortOrder="@Model.CurrentSort"
+   asp-route-pageIndex="@(Model.Asset.PageIndex - 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   class="btn btn-primary @prevDisabled">
+	Previous
+</a>
+<a asp-page="./List"
+   asp-route-sortOrder="@Model.CurrentSort"
+   asp-route-pageIndex="@(Model.Asset.PageIndex + 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   class="btn btn-primary @nextDisabled">
+	Next
+</a>

@@ -1,0 +1,113 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    var userName = HttpContextAccessor.HttpContext.Session.GetString("username");
+    var role = HttpContextAccessor.HttpContext.Session.GetString("role");
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - StockManagement</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/SE1610_Group2_A3.styles.css" asp-append-version="true" />
+    <style>
+        .header{
+            background: #3e3e3e;
+        }
+
+        .headerContent{
+            color:white;
+        }
+        .header a{
+            color:white;
+        }
+        .header li{
+            color:white;
+        }
+    </style>
+</head>
+<body style="background:#ffeedb">
+    <header>
+        <nav style="background: #3e3e3e" class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
+            <div class="container-fluid header">
+                <a style="color:white" class="navbar-brand headerContent" asp-area="" asp-page="/Index">AssetManagement</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse">
+                    <ul class="navbar-nav flex-grow-1 ms-auto">
+                        <li class="nav-item">
+                            <a style="color:white" class="nav-link" asp-area="" asp-page="/Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a style="color:white" class="nav-link" asp-area="" asp-page="/Privacy">Privacy</a>
+                        </li>
+                        @if(role == "admin") {
+                            <li class="nav-item">
+                                <a style="color:white" class="nav-link" asp-area="" asp-page="/Admin/Assets/List">Asset management</a>
+                            </li>
+                             <li class="nav-item">
+                                <a style="color:white" class="nav-link" asp-area="" asp-page="/Admin/AssetBorrowing/AssetBorrowingManagement">Asset Borrowing</a>
+                            </li>
+                            <li class="nav-item">
+                                <a style="color:white" class="nav-link" asp-area="" asp-page="/Admin/Users/Index">User Management</a>
+                            </li>
+                            <li class="nav-item">
+                                <a style="color:white" class="nav-link" asp-area="" asp-page="/Admin/AssetBorrowing/List">Borrowing Management</a>
+                            </li>
+                        }
+                        @if(role == "user") {
+                            <li class="nav-item">
+                                <a style="color:white" class="nav-link" asp-area="" asp-page="/Assets/AssetBorrow">Asset</a>
+                            </li>
+                        }
+                        <li class="nav-item" style="position: absolute;right: 50px;">
+                            @if (userName == null)
+                            {
+                                <a style="color:white" class="nav-link" asp-area="" asp-page="/Login">
+                                    Login
+                                </a>
+                            }
+                            else
+                            {
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                        @userName
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                        <li><a style="color:black" class="dropdown-item" href="/EditAccount">Edit account</a></li>
+                                        <li><a style="color:black" class="dropdown-item" href="/ChangePassword">Change password</a></li>
+                                        <li><a style="color:black" class="dropdown-item" href="/Logout">Log out</a></li>
+                                    </ul>
+                                </div>
+                            }
+                        </li>
+                       
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main style="min-height:600px" role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; - <a asp-area="" asp-page="/Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

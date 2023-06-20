@@ -1,0 +1,114 @@
+﻿@page
+@model AssetManagement.Pages.Admin.AssetBorrowing.ListModel
+
+@{
+    ViewData["Title"] = "List";
+}
+
+<h1>List</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<Form asp-page="./Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by name:
+            <input type="text" name="SearchString" value="@Model.CurrentFilter" />
+            <input type="submit" value="Search" class="btn btn-primary" />
+            <a asp-page="./List">Back to full List</a>
+        </p>
+    </div>
+</Form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <a asp-page="./Index" asp-route-sortOrder="@Model.DateSort"
+                   asp-route-currentFilter="@Model.CurrentFilter">
+                    @Html.DisplayNameFor(model => model.BorrowingAsset[0].BorrowDate)
+
+                </a>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BorrowingAsset[0].Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BorrowingAsset[0].Amount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BorrowingAsset[0].DueDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BorrowingAsset[0].RetrurnDate)
+            </th>
+            <th>
+                    @Html.DisplayNameFor(model => model.BorrowingAsset[0].Asset)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BorrowingAsset[0].Borrower)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.BorrowingAsset) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.BorrowDate)
+            </td>
+                @if(item.Status == true)
+                {
+                    <td style="color: red">
+                        Đang cho mượn
+                    </td>
+                }
+                else
+                {
+                    <td style="color: green">
+                        Đã trả
+                    </td>
+                }
+              
+            <td>
+                @Html.DisplayFor(modelItem => item.Amount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DueDate)
+            </td>
+            <td>
+                    @Convert.ToDateTime(item.DueDate).ToString("dd/MM/yyyy")
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Asset.AssetName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Borrower.Username)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+@{
+    var prevDisabled = !Model.BorrowingAsset.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.BorrowingAsset.HasNextPage ? "disabled" : "";
+}
+<a asp-page="./List"
+   asp-route-sortOrder="@Model.CurrentSort"
+   asp-route-pageIndex="@(Model.BorrowingAsset.PageIndex - 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   class="btn btn-primary @prevDisabled">
+    Previous
+</a>
+<a asp-page="./List"
+   asp-route-sortOrder="@Model.CurrentSort"
+   asp-route-pageIndex="@(Model.BorrowingAsset.PageIndex + 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   class="btn btn-primary @nextDisabled">
+    Next
+</a>

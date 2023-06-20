@@ -1,0 +1,109 @@
+﻿@page
+@model AssetManagement.Pages.Admin.DetailAssetModel
+@{
+}
+
+<h1 style="font-weight: bold">Asset Detail</h1>
+<table>
+    <tr>
+        <td><h4>Asset name: </h4></td>
+        <td>@Model.asset.AssetName</td>
+    </tr>
+    <tr>
+        <td><h4>Category: </h4></td>
+        <td>@Model.asset.Category.CategoryName </td>
+    </tr>
+    <tr>
+        <td><h4>Status: </h4></td>
+        @if(Model.asset.Status == false)
+        {
+            <td style="color: green; font-weight: bold;">Sẵn sàng</td>
+        }
+        else
+        {
+            <td style="color: red; font-weight: bold;">Đang mượn</td>
+        }
+    <tr>
+        <td><h4><span>Specification: </span></h4> </td>
+        <td>@Model.asset.Specification</td>
+    </tr>
+</table>
+<div>History</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Asset Name
+            </th>
+            <th>
+                Category
+            </th>
+            <th>
+                Ngày Đăng Ký Mượn
+            </th>
+            <th>
+                Status
+            </th>
+            <th>
+                Hạn phải trả
+            </th>
+            <th>
+                Ngày trả
+            </th>
+            <th>
+                Người mượn
+            </th>
+
+
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.assetBorrowing)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Asset.AssetName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Asset.Category.CategoryName)
+                </td>
+                <td>
+                    @{
+                        string date = item.BorrowDate?.ToShortDateString();
+                        string duedate = item.DueDate?.ToShortDateString();
+                        string returnDate = item.RetrurnDate?.ToShortDateString();
+                    }
+                    @Html.DisplayFor(modelItem => date)
+                </td>
+
+                @if (item.Status == true)
+                {
+                    <td>
+                        Đang mượn
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        Đã trả
+                    </td>
+                }
+                <td>
+                    @Html.DisplayFor(modelItem => duedate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => returnDate)
+                   
+                </td>
+                <td>
+                     @(item.Borrower.FirstName +" "+ item.Borrower.LastName)
+                </td>
+               
+
+            </tr>
+        }
+    </tbody>
+</table>
+<a asp-page="../Admin/AssetBorrowing/AssetBorrowingManagement">Back to list</a>

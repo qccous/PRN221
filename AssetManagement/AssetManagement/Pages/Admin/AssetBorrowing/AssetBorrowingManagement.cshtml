@@ -1,0 +1,115 @@
+﻿@page
+@model AssetManagement.Pages.Admin.AssetBorrowing.AssetBorrowingManagementModel
+
+@{
+    ViewData["Title"] = "AssetBorrowingManagement";
+}
+<script type="text/javascript">
+	function doDelete(id, name) {
+		if (confirm("Bạn xác nhận trả sách " + name + " chứ ?")) {
+			$("#form").submit();
+		}
+	}
+</script>
+<h1>AssetBorrowingManagement</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<Form asp-page="./Index" method="get">
+	<div class="form-actions no-color">
+		<p>
+			Find by name:
+			<input type="text" name="SearchString" value="@Model.CurrentFilter" />
+			<input type="submit" value="Search" class="btn btn-primary" />
+			<a asp-page="./Index">Back to full List</a>
+		</p>
+	</div>
+</Form>
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				
+					@Html.DisplayNameFor(model => model.Asset[0].Image)
+				
+			</th>
+			<th><a asp-page="./AssetBorrowingManagement" asp-route-sortOrder="@Model.NameSort"
+				   asp-route-currentFilter="@Model.CurrentFilter">
+				Asset Name
+				</a>
+			</th>
+			<th>
+				Category
+			</th>
+			<th>
+				Status
+			</th>
+			<th>Action</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model.Asset)
+		{
+			<tr>
+				<td>
+					<img src="/images/@item.Image" width="100px" height="100px" />
+				</td>
+				<td>
+					<a asp-page="../DetailAsset" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.AssetName)</a>
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Category.CategoryName)
+				</td>
+				@if (item.Status == true)
+				{
+					<td style="color: red; font-weight: bold;">
+						Đang mượn
+					</td>
+				}
+				else
+				{
+					<td style="color: green; font-weight: bold;">
+						Sẵn sàng
+					</td>
+				}
+				@if (item.Status == true)
+				{
+					<td >
+						<form asp-page="./ReturnAsset" method="post" asp-route-id="@item.Id">
+							<button class="btn btn-danger"> Trả đồ</button>
+						</form>
+					</td>
+				}
+				else
+				{
+					<td>
+						<a asp-page="../BorrowAsset" asp-route-assetId="@item.Id">
+
+							<button class="btn btn-success">Cho mượn</button>
+
+						</a>
+					</td>
+				}
+			</tr>
+		}
+	</tbody>
+</table>
+@{
+	var prevDisabled = !Model.Asset.HasPreviousPage ? "disabled" : "";
+	var nextDisabled = !Model.Asset.HasNextPage ? "disabled" : "";
+}
+<a asp-page="./AssetBorrowingManagement"
+   asp-route-sortOrder="@Model.CurrentSort"
+   asp-route-pageIndex="@(Model.Asset.PageIndex - 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   class="btn btn-primary @prevDisabled">
+	Previous
+</a>
+<a asp-page="./AssetBorrowingManagement"
+   asp-route-sortOrder="@Model.CurrentSort"
+   asp-route-pageIndex="@(Model.Asset.PageIndex + 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   class="btn btn-primary @nextDisabled">
+	Next
+</a>
