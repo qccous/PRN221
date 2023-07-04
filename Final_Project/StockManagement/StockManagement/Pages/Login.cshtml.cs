@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Security.Principal;
+using Microsoft.EntityFrameworkCore;
 using StockManagement.Models;
 
 namespace StockManagement.Pages
@@ -15,7 +16,7 @@ namespace StockManagement.Pages
         }
         
         [BindProperty] public List<User> Users { get; set; } = default!;
-        [BindProperty] public User Account { get; set; } = default!;
+        [BindProperty] public User UserLogging { get; set; } = default!;
         [BindProperty] public int Error { get; set; }
         
         public void OnGetAsync()
@@ -23,34 +24,18 @@ namespace StockManagement.Pages
             Users = _context.Users.ToList();
         }
         
-        public IActionResult OnPost()
+        
+        public async Task<IActionResult> OnPostAsync()
         {
-            var user = _context.Users
-                .FirstOrDefault(x =>
-                    x.Username != null && x.Password != null && x.Username.Equals(Account.Username) &&
-                    x.Password.Equals(Account.Password));
-            switch (user)
+            if (!ModelState.IsValid)
             {
-                case { RoleId: 1 }:
-                {
-                    Error = 0;
-                    if (user.Username != null) HttpContext.Session.SetString("username", user.Username);
-                    HttpContext.Session.SetString("userLogin", user.Id.ToString());
-                    HttpContext.Session.SetString("role", "admin");
-                    return RedirectToPage("Assets/AssetBorrow");
-                }
-                case { RoleId: 2 }:
-                {
-                    Error = 0;
-                    if (user.Username != null) HttpContext.Session.SetString("username", user.Username);
-                    HttpContext.Session.SetString("userLogin", user.Id.ToString());
-                    HttpContext.Session.SetString("role", "user");
-                    return RedirectToPage("Index");
-                }
-                default:
-                    Error = 1;
-                    return RedirectToPage("Login");
+                return Page();
             }
+
+            var selectedUser = await _context.Users.SingleOrDefaultAsync(x =>
+                x.Password != null && x.Username != null && x.Username.Equals(UserLogging.Username) && x.Password.Equals(UserLogging.Password));
+           
+            return RedirectToPage("/Admin/StockBorrowManagement");
         }
     }
 }

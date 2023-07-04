@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace StockManagement.Models
 {
@@ -11,7 +12,10 @@ namespace StockManagement.Models
         }
 
         public int Id { get; set; }
+        [Required(ErrorMessage = "Pwd not empty")]
         public string? Username { get; set; }
+        [DataType(DataType.Password)]
+        [Required(ErrorMessage = "Pwd not empty")]
         public string? Password { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
